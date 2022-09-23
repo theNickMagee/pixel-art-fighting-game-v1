@@ -11,7 +11,6 @@
 
 // sprite sheet ref: https://github.com/CodingTrain/Coding-Challenges/blob/main/111_animated_sprite
 
-let eventSignal = "START";
 
 function setup() {
     // set width equal to div widht, we dont want it to be too small
@@ -19,15 +18,18 @@ function setup() {
     var canvas = createCanvas(dims[0], dims[1]);
     canvas.parent("mainCanvas");
 
+    frameRate(30);
+
     noLoop();
 }
 
 function draw() {
     clear();
 
-    listenforEvents();
 
-    background(200, 30, 130);
+
+    listenForEvents();
+
 }
 
 function keyPressed() {
@@ -36,6 +38,11 @@ function keyPressed() {
 
 function mouseReleased() {
     return false;
+}
+
+function mouseMoved() {
+    eventLine.push("MOUSE_MOVED");
+    listenForEvents();
 }
 
 function calcCanvasDimensions() {
