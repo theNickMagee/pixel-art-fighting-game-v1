@@ -18,6 +18,8 @@ function setup() {
     var canvas = createCanvas(dims[0], dims[1]);
     canvas.parent("mainCanvas");
 
+    cursor(CROSS);
+
     frameRate(30);
 
     noLoop();
@@ -37,12 +39,15 @@ function keyPressed() {
 }
 
 function mouseReleased() {
+    eventLine.push({ title: "MOUSE_RELEASED", x: mouseX, y: mouseY });
+    listenForEvents();
     return false;
 }
 
 function mouseMoved() {
-    eventLine.push("MOUSE_MOVED");
+    eventLine.push({ title: "MOUSE_MOVED", x: mouseX, y: mouseY });
     listenForEvents();
+    return false;
 }
 
 function calcCanvasDimensions() {
