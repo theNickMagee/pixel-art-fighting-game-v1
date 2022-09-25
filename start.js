@@ -34,20 +34,25 @@ function draw() {
     eventLine = eventLineNextFrame.slice();
     eventLineNextFrame = [];
 
+    listenForKeys();
+
 
 }
 
 function keyPressed() {
-    return false;
+
+
+
+    // return false;
 }
 
 function mouseReleased() {
-    eventLineNextFrame.push({ title: "MOUSE_RELEASED", x: mouseX, y: mouseY });
+    eventLine.push({ title: "MOUSE_RELEASED", x: mouseX, y: mouseY });
     return false;
 }
 
 function mouseMoved() {
-    eventLineNextFrame.push({ title: "MOUSE_MOVED", x: mouseX, y: mouseY });
+    eventLine.push({ title: "MOUSE_MOVED", x: mouseX, y: mouseY });
     return false;
 }
 

@@ -13,3 +13,23 @@ const mouseInCenterMode = (mx, my, bx, by, bw, bh) => {
     }
     return false;
 }
+
+
+const removeEventOfType = (title) => {
+    eventLine = eventLine.filter((e) => {
+        if (e.title === title) {
+            return false;
+        } else {
+            return true;
+        }
+    })
+    eventLineNextFrame = eventLineNextFrame.filter((e) => {
+        if (e.title === title) {
+            return false;
+        } else {
+            return true;
+        }
+    })
+
+    console.log("removing type from: ", eventLineNextFrame)
+}

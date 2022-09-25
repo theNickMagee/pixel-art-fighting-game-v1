@@ -38,6 +38,32 @@ const listenForEvents = () => {
         if (currentEvent.title === "LIL_RED_WALK_IN") {
             lilRedWalkIn(currentEvent.data);
         }
+
+        if (currentEvent.title === "LIL_RED_IDLE") {
+            idleBigRed(currentEvent.data);
+        }
+
+        if (currentEvent.title === "RIGHT") {
+            lilRedMoveRight();
+        }
+        if (currentEvent.title === "DOWN") {
+            lilRedMoveDown();
+        }
+        if (currentEvent.title === "UP") {
+            console.log("UP");
+            lilRedMoveUp();
+        }
+        if (currentEvent.title === "LEFT") {
+            lilRedMoveLeft();
+        }
+
+        if (currentEvent.title === "LIL_RED_JUMP") {
+            lilRedJump(currentEvent.data)
+        }
+
+        if (currentEvent.title === "LIL_RED_RUN") {
+            lilRedRun(currentEvent.data)
+        }
     }
 
 }

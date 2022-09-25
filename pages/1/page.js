@@ -1,5 +1,5 @@
 var mainMenuPage = {
-    backgroundImageRoute: 'pages/1/staircase.jpeg',
+    backgroundImageRoute: 'pages/1/tree.png',
     titleRoute: 'pages/1/title.png',
     playButton: 'pages/1/playButton.png',
     playButtonHover: 'pages/1/playButtonHover.png',

@@ -4,15 +4,101 @@ const lilRed = {
         imgW: 1344,
         imgH: 1463,
         walkFrames: [],
-        spriteSheet: null
+        spriteSheet: null,
+        walkInFrames: [77, 78, 120]
     },
+    grounded: true,
+    running: false,
+    x: -100,
+    y: 450,
+    velX: 0,
+    velY: 0,
+    accX: 0,
+    accY: 0
+}
+
+const updateLilRedPos = () => {
+    lilRed.x = lilRed.x += lilRed.velX;
+    lilRed.y = lilRed.y += lilRed.velY;
+    lilRed.velX = lilRed.velX += lilRed.accX;
+    lilRed.velY = lilRed.velY += lilRed.accY;
+
+
+
+    console.log(lilRed.y)
+    if (lilRed.y < 400 && lilRed.accY < 10) {
+        lilRed.accY += 1;
+
+    } else if (lilRed.y > 450) {
+        lilRed.velY = 0;
+        lilRed.accY = 0;
+        lilRed.y = 450;
+
+    } else {
+        // lilRed.accY = 0;
+        // lilRed.velY = 0;
+    }
+
+    if (lilRed.accX > 0) {
+        lilRed.accX -= 1;
+
+    }
+
+    if (lilRed.accX < 0) {
+        lilRed.accX += 1;
+
+    }
+
+    if (lilRed.accX < 2 && lilRed.accX > -2) {
+        lilRed.accX = 0;
+        lilRed.velX = 0;
+
+    }
+
+    if (lilRed.velX < 1 && lilRed.velX > -1) {
+        lilRed.accX = 0;
+        lilRed.velX = 0;
+
+    }
+
+    if (lilRed.velX > 13) {
+        lilRed.velX = 13;
+
+    }
+
+    if (lilRed.velX < -13) {
+        lilRed.velX = -13;
+
+    }
+
+
+
+    if (lilRed.velY > 10) {
+        lilRed.velY = 10;
+
+    }
+
+    if (lilRed.velY < -10) {
+        lilRed.velY = -10;
+
+    }
+
+
+
+
+    console.log("x: ", lilRed.x);
+    console.log("accelX: ", lilRed.accX);
+    console.log("velY: ", lilRed.velX);
+
+
+
 
 
 }
 
+
+
 const populateLilRed = () => {
-    lilRed.x = 100;
-    lilRed.y = 500;
     loadImage(lilRed.animFile1.animationFileName, (spriteSheet) => {
         lilRed.animFile1.spriteSheet = spriteSheet;
         eventLineNextFrame.push({
@@ -26,16 +112,9 @@ const populateLilRed = () => {
 
 
 
-const displayLilRedSprite = (img, x, y) => {
-    push();
-    imageMode(CENTER);
-    image(img, x, y)
-    pop();
-}
+const displayLilRedSprite = (frameIndex) => {
 
-const lilRedWalkIn = (data) => {
-
-
+    updateLilRedPos();
 
     let widthInc = lilRed.animFile1.imgW / 12;
     let heightInc = lilRed.animFile1.imgH / 11;
@@ -47,18 +126,14 @@ const lilRedWalkIn = (data) => {
     let dw = widthInc;
     let dh = heightInc;
 
-    let sx = (data.currentFrame % 12) * widthInc;
-    let sy = floor(data.currentFrame / 12) * heightInc;
+    let sx = (frameIndex % 12) * widthInc;
+    let sy = floor(frameIndex / 12) * heightInc;
 
-    displayBg();
     push();
-    // translate();
-    // scale(-2, 1);
     imageMode(CENTER);
     scale(-1, 1);
     translate(-lilRed.x * 2, 0);
-    // console.log(mouseX, mouseY);
-    copy(lilRed.animFile1.spriteSheet, sx, sy, sw, sh, lilRed.x - dw * 2, lilRed.y - dh * 2, dw * 4, dh * 4);
+    copy(lilRed.animFile1.spriteSheet, sx, sy, sw, sh, lilRed.x - dw * 3 / 2, lilRed.y - dh * 3 / 2, dw * 3, dh * 3);
     // stroke(255, 0, 0);
     // strokeWeight(4);
     // rectMode(CENTER);
@@ -67,14 +142,146 @@ const lilRedWalkIn = (data) => {
     // fill(0, 255, 0);
     // rect(lilRed.x, lilRed.y, 50, 50)
     pop();
+}
+
+const lilRedWalkIn = (data) => {
+
+    displayBg();
+
+    displayLilRedSprite(data.currentFrame);
+
     if (data.currentFrame === data.endFrame) {
         data.currentFrame = data.startFrame;
     }
-    eventLineNextFrame.push({
-        title: "LIL_RED_WALK_IN", data: {
-            currentFrame: data.currentFrame + 1, startFrame: 0, endFrame: 23
-        }
-    })
-    lilRed.x = lilRed.x + 1;
+
+    lilRed.velX = 20;
+    updateLilRedPos();
+    if (lilRed.x > width / 2) {
+        lilRed.x = width / 2;
+        removeEventOfType("LIL_RED_WALK_IN");
+        eventLineNextFrame.push({ title: "LIL_RED_IDLE", data: { frames: [50, 51], currentFrameIndex: 0 } });
+        lilRed.velX = 0;
+    } else {
+        eventLineNextFrame.push({
+            title: "LIL_RED_WALK_IN", data: {
+                currentFrame: data.currentFrame + 1, startFrame: 0, endFrame: 23
+            }
+        })
+    }
     // console.log(lilRed.x)
 }
+
+
+const idleBigRed = (data) => {
+
+    console.log("idling")
+    displayBg();
+
+    displayLilRedSprite(data.frames[data.currentFrameIndex])
+
+    if (frameCount % 15 === 0) {
+        let nextFrameIndex = data.currentFrameIndex + 1;
+        if (nextFrameIndex === 2) {
+            nextFrameIndex = 0;
+        }
+        eventLineNextFrame.push({ title: "LIL_RED_IDLE", data: { frames: [50, 51], currentFrameIndex: nextFrameIndex } })
+    } else {
+        eventLineNextFrame.push({ title: "LIL_RED_IDLE", data: { frames: data.frames, currentFrameIndex: data.currentFrameIndex } })
+    }
+    return;
+}
+
+const lilRedJump = (data) => {
+
+
+    displayBg();
+
+    displayLilRedSprite(data.currentFrame);
+
+    console.log("Jumping")
+
+
+    if (frameCount % 2 === 0) {
+        if (data.currentFrame === data.endFrame) {
+            lilRed.grounded = true;
+            eventLineNextFrame.push({ title: "LIL_RED_IDLE", data: { frames: [50, 51], currentFrameIndex: 0 } })
+            return;
+        }
+        eventLineNextFrame.push({ title: "LIL_RED_JUMP", data: { startFrame: 36, endFrame: 51, currentFrame: data.currentFrame + 1 } });
+    } else {
+        eventLineNextFrame.push({ title: "LIL_RED_JUMP", data: { startFrame: 36, endFrame: 51, currentFrame: data.currentFrame } });
+    }
+
+}
+
+const lilRedRun = (data) => {
+    if (data.direction === "right") {
+        displayBg();
+
+        displayLilRedSprite(data.currentFrame);
+
+        console.log("Running")
+
+
+        if (frameCount % 2 === 0) {
+            if (data.currentFrame === data.endFrame) {
+                lilRed.running = false;
+                eventLineNextFrame.push({ title: "LIL_RED_IDLE", data: { frames: [50, 51], currentFrameIndex: 0 } })
+                return;
+            }
+            eventLineNextFrame.push({
+                title: "LIL_RED_RUN", data: {
+                    currentFrame: data.currentFrame + 1, startFrame: 0, endFrame: 23, direction: "right"
+                }
+            });
+        } else {
+            eventLineNextFrame.push({
+                title: "LIL_RED_RUN", data: {
+                    currentFrame: data.currentFrame, startFrame: 0, endFrame: 23, direction: "right"
+                }
+            });
+        }
+
+
+    }
+}
+
+const lilRedMoveRight = () => {
+    lilRed.accX = 20;
+
+    if (lilRed.grounded && !lilRed.running) {
+
+        lilRed.running = true;
+        eventLineNextFrame.push({
+            title: "LIL_RED_RUN", data: {
+                currentFrame: 0, startFrame: 0, endFrame: 23, direction: "right"
+            }
+        });
+        removeEventOfType("LIL_RED_IDLE")
+        removeEventOfType("LIL_RED_JUMP")
+    }
+}
+const lilRedMoveUp = () => {
+    if (lilRed.grounded) {
+        lilRed.accY = -1;
+
+        lilRed.grounded = false;
+        console.log("call event")
+        eventLineNextFrame.push({ title: "LIL_RED_JUMP", data: { startFrame: 36, endFrame: 52, currentFrame: 36 } });
+        removeEventOfType("LIL_RED_IDLE")
+    }
+}
+const lilRedMoveLeft = () => {
+    lilRed.accX = -10;
+    // if (lilRed.grounded) {
+    //     eventLineNextFrame.push({ title: "LIL_RED_RUN", data: { direction: "left", startFrame: 36, endFrame: 52, currentFrame: 36 } });
+    // }
+    // updateLilRedPos();
+}
+
+const lilRedMoveDown = () => {
+    lilRed.accY = 2;
+}
+
+
+
