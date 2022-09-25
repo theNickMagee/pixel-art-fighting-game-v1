@@ -30,10 +30,10 @@ const updateLilRedPos = () => {
         lilRed.accY += 1;
 
     }
-    if (lilRed.y > 450 && lilRed.x + 50 > width / 3 && lilRed.x - 50 < 2 * width / 3 && lilRed.y < 500) {
+    if (lilRed.y > 475 && lilRed.x + 50 > width / 3 && lilRed.x - 50 < 2 * width / 3 && lilRed.y < 550) {
         lilRed.velY = 0;
         lilRed.accY = 0;
-        lilRed.y = 450;
+        lilRed.y = 475;
 
     }
 
