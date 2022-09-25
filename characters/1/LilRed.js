@@ -11,8 +11,8 @@ const lilRed = {
 }
 
 const populateLilRed = () => {
-    lilRed.x = -50;
-    lilRed.y = height - 100;
+    lilRed.x = 100;
+    lilRed.y = 500;
     loadImage(lilRed.animFile1.animationFileName, (spriteSheet) => {
         lilRed.animFile1.spriteSheet = spriteSheet;
         eventLineNextFrame.push({
@@ -52,9 +52,20 @@ const lilRedWalkIn = (data) => {
 
     displayBg();
     push();
+    // translate();
+    // scale(-2, 1);
+    imageMode(CENTER);
     scale(-1, 1);
     translate(-lilRed.x * 2, 0);
-    copy(lilRed.animFile1.spriteSheet, sx, sy, sw, sh, lilRed.x, lilRed.y, -dw, dh);
+    // console.log(mouseX, mouseY);
+    copy(lilRed.animFile1.spriteSheet, sx, sy, sw, sh, lilRed.x - dw * 2, lilRed.y - dh * 2, dw * 4, dh * 4);
+    // stroke(255, 0, 0);
+    // strokeWeight(4);
+    // rectMode(CENTER);
+    // noFill();
+    // rect(lilRed.x, lilRed.y, dw * 4, dh * 4)
+    // fill(0, 255, 0);
+    // rect(lilRed.x, lilRed.y, 50, 50)
     pop();
     if (data.currentFrame === data.endFrame) {
         data.currentFrame = data.startFrame;
@@ -65,5 +76,5 @@ const lilRedWalkIn = (data) => {
         }
     })
     lilRed.x = lilRed.x + 1;
-    console.log(lilRed.x)
+    // console.log(lilRed.x)
 }
