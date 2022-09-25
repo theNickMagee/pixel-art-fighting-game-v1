@@ -3,17 +3,17 @@ var mainMenuPage = {
     titleRoute: 'pages/1/title.png',
     playButton: 'pages/1/playButton.png',
     playButtonHover: 'pages/1/playButtonHover.png',
+    desc: 'pages/1/description.png'
 }
 
 const displayMenuPage = () => {
 
-    let pbImg;
     let bgImg;
-    let titleImg;
 
     let backgroundImageLoaded = false;
     let playImageLoaded = false;
     let titleImageLoaded = false;
+    let descImgLoaded = false;
 
     loadImage(mainMenuPage.backgroundImageRoute, img => {
         backgroundImageLoaded = true;
@@ -52,15 +52,30 @@ const displayMenuPage = () => {
         checkIfFinished();
     });
 
+    loadImage(mainMenuPage.desc, img => {
+        descImgLoaded = true;
+        // rect(0, 0, img.width, img.height)
+        imageMode(CENTER);
+
+        mainMenuPage.descImgX = width / 2;
+        mainMenuPage.descImgY = height / 2;
+        mainMenuPage.descImgW = img.width;
+        mainMenuPage.descImgH = img.height;
+
+        mainMenuPage.descImg = img;
+        checkIfFinished();
+    });
+
     loadImage(mainMenuPage.playButtonHover, hoverImg => {
         mainMenuPage.hoverPlayButton = hoverImg;
     });
 
     const checkIfFinished = () => {
-        if (backgroundImageLoaded && titleImageLoaded && playImageLoaded) {
+        if (backgroundImageLoaded && titleImageLoaded && playImageLoaded && descImgLoaded) {
             displayBg();
             displayTitle();
             displayBtn();
+            displayDesc();
 
 
             // eventLine.push("WAIT_MENU");
@@ -71,6 +86,12 @@ const displayMenuPage = () => {
     pop();
 
 }
+
+const displayDesc = () => {
+    image(mainMenuPage.descImg, mainMenuPage.descImgX, mainMenuPage.descImgY);
+}
+
+
 const displayBtn = () => {
     image(mainMenuPage.playButton, mainMenuPage.playButtonX, mainMenuPage.playButtonY);
 }
@@ -96,6 +117,8 @@ const waitForActionMenuPage = (mx, my) => {
     displayBg();
 
     displayTitle();
+
+    displayDesc();
 
     if (mouseInCenterMode(mx, my,
         mainMenuPage.playButtonX,
@@ -142,6 +165,9 @@ const checkIfEnterGamePressed = (mx, my) => {
 
         mainMenuPage.playButtonY += 10;
         image(mainMenuPage.playButton, mainMenuPage.playButtonX, mainMenuPage.playButtonY);
+
+        mainMenuPage.descImgY += 10;
+        displayDesc();
 
         if (mainMenuPage.titleImgY - 40 < windowHeight) {
             eventLineNextFrame.push({ title: "MOUSE_RELEASED", x: mx, y: mainMenuPage.playButtonY });

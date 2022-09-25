@@ -25,19 +25,21 @@ const updateLilRedPos = () => {
 
 
 
-    console.log(lilRed.y)
-    if (lilRed.y < 400 && lilRed.accY < 10) {
+    // console.log(lilRed.y)
+    if ((lilRed.y < 400 && lilRed.accY < 10) || (lilRed.x + 50 < width / 3 || lilRed.x - 50 > 2 * width / 3)) {
         lilRed.accY += 1;
 
-    } else if (lilRed.y > 450) {
+    }
+    if (lilRed.y > 450 && lilRed.x + 50 > width / 3 && lilRed.x - 50 < 2 * width / 3 && lilRed.y < 500) {
         lilRed.velY = 0;
         lilRed.accY = 0;
         lilRed.y = 450;
 
-    } else {
-        // lilRed.accY = 0;
-        // lilRed.velY = 0;
     }
+
+    // if (lilRed.x > 200 || lilRed.x < 700) {
+    //     lilRed.accY += 1;
+    // }
 
     if (lilRed.accX > 0) {
         lilRed.accX -= 1;
@@ -86,11 +88,16 @@ const updateLilRedPos = () => {
 
 
 
+    // console.log("accelY: ", lilRed.accY);
+    // console.log("y: ", lilRed.y);
+    // console.log("velY: ", lilRed.velY);
     console.log("x: ", lilRed.x);
-    console.log("accelX: ", lilRed.accX);
-    console.log("velY: ", lilRed.velX);
 
-
+    //bottom border
+    if (lilRed.y > height || lilRed.x < 0 || lilRed.x > width) {
+        lilRed.y = 0;
+        lilRed.x = width / 2;
+    }
 
 
 
@@ -174,7 +181,7 @@ const lilRedWalkIn = (data) => {
 
 const idleBigRed = (data) => {
 
-    console.log("idling")
+    // console.log("idling")
     displayBg();
 
     displayLilRedSprite(data.frames[data.currentFrameIndex])
