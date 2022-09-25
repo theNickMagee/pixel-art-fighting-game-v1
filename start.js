@@ -22,15 +22,18 @@ function setup() {
 
     frameRate(30);
 
-    noLoop();
+    displayMenuPage();
+
 }
 
 function draw() {
-    clear();
+    // clear();
 
-
-
+    //every 2 frames we listen for display updates
     listenForEvents();
+    eventLine = eventLineNextFrame.slice();
+    eventLineNextFrame = [];
+
 
 }
 
@@ -39,14 +42,12 @@ function keyPressed() {
 }
 
 function mouseReleased() {
-    eventLine.push({ title: "MOUSE_RELEASED", x: mouseX, y: mouseY });
-    listenForEvents();
+    eventLineNextFrame.push({ title: "MOUSE_RELEASED", x: mouseX, y: mouseY });
     return false;
 }
 
 function mouseMoved() {
-    eventLine.push({ title: "MOUSE_MOVED", x: mouseX, y: mouseY });
-    listenForEvents();
+    eventLineNextFrame.push({ title: "MOUSE_MOVED", x: mouseX, y: mouseY });
     return false;
 }
 

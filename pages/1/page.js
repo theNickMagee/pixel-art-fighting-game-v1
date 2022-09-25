@@ -6,7 +6,6 @@ var mainMenuPage = {
 }
 
 const displayMenuPage = () => {
-    console.log("displaying menu page");
 
     let pbImg;
     let bgImg;
@@ -19,7 +18,6 @@ const displayMenuPage = () => {
     loadImage(mainMenuPage.backgroundImageRoute, img => {
         backgroundImageLoaded = true;
         imageMode(CORNER);
-        background(img);
         mainMenuPage.bgImg = img;
         checkIfFinished();
     });
@@ -37,7 +35,6 @@ const displayMenuPage = () => {
         mainMenuPage.titleImgW = titleImg.width;
         mainMenuPage.titleImgH = titleImg.height;
 
-        image(titleImg, width / 2, height / 3);
         checkIfFinished();
     });
 
@@ -52,7 +49,6 @@ const displayMenuPage = () => {
         mainMenuPage.playButtonH = bgImg.height;
 
         mainMenuPage.playButton = bgImg;
-        image(bgImg, mainMenuPage.playButtonX, mainMenuPage.playButtonY);
         checkIfFinished();
     });
 
@@ -62,6 +58,11 @@ const displayMenuPage = () => {
 
     const checkIfFinished = () => {
         if (backgroundImageLoaded && titleImageLoaded && playImageLoaded) {
+            displayBg();
+            displayTitle();
+            displayBtn();
+
+
             // eventLine.push("WAIT_MENU");
             // listenForEvents();
         }
@@ -70,19 +71,31 @@ const displayMenuPage = () => {
     pop();
 
 }
+const displayBtn = () => {
+    image(mainMenuPage.playButton, mainMenuPage.playButtonX, mainMenuPage.playButtonY);
+}
+
+const displayBg = () => {
+    push();
+    imageMode(CORNER);
+    background(mainMenuPage.bgImg);
+    pop();
+}
+
+const displayTitle = () => {
+    push();
+    imageMode(CENTER);
+    image(mainMenuPage.titleImg, mainMenuPage.titleImgX, mainMenuPage.titleImgY);
+    pop();
+}
 
 const waitForActionMenuPage = (mx, my) => {
     fill(200, 200, 40);
     rectMode(CENTER)
     // rect(mainMenuPage.playButtonX, mainMenuPage.playButtonY, mainMenuPage.playButtonW, mainMenuPage.playButtonH);
-    push();
-    imageMode(CORNER);
-    background(mainMenuPage.bgImg);
-    pop();
+    displayBg();
 
-    push();
-    image(mainMenuPage.titleImg, mainMenuPage.titleImgX, mainMenuPage.titleImgY);
-    pop();
+    displayTitle();
 
     if (mouseInCenterMode(mx, my,
         mainMenuPage.playButtonX,
@@ -107,7 +120,10 @@ const checkIfEnterGamePressed = (mx, my) => {
         mainMenuPage.playButtonW,
         mainMenuPage.playButtonH)) {
         // console.log("in")
-        state.in = "loading";
+        if (state.in === "wait") {
+            state.in = "loading";
+
+        }
 
         // while (mainMenuPage.playButtonY < windowHeight) {
         //     console.log("moving y")
@@ -116,15 +132,24 @@ const checkIfEnterGamePressed = (mx, my) => {
         //     background(mainMenuPage.bgImg);
         //     pop();
 
-        mainMenuPage.playButtonY += 0.01;
-        my += 0.01;
+        push();
+        imageMode(CORNER);
+        background(mainMenuPage.bgImg);
+        pop();
+
+        mainMenuPage.titleImgY += 10;
+        image(mainMenuPage.titleImg, mainMenuPage.titleImgX, mainMenuPage.titleImgY);
+
+        mainMenuPage.playButtonY += 10;
         image(mainMenuPage.playButton, mainMenuPage.playButtonX, mainMenuPage.playButtonY);
 
-        if (mainMenuPage.playButtonY < windowHeight) {
-            eventLine.push({ title: "MOUSE_RELEASED", x: mx, y: my });
-            listenForEvents();
+        if (mainMenuPage.titleImgY - 40 < windowHeight) {
+            eventLineNextFrame.push({ title: "MOUSE_RELEASED", x: mx, y: mainMenuPage.playButtonY });
+        } else {
+            if (state.in === "loading") {
+                eventLineNextFrame.push({ title: "DROP_CHARACTER" })
+            }
         }
     }
-    // } else {
-    // }
+
 }

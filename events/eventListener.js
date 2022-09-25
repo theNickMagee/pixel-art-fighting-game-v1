@@ -1,27 +1,19 @@
-let eventLine = [{ title: "START" }];
-
+let eventLine = [];
+let eventLineNextFrame = [];
 var eventData;
 
 var state = { page: "home", in: "wait" };
 
 const listenForEvents = () => {
 
+
+
     while (eventLine.length > 0) {
+
 
 
         let currentEvent = eventLine.shift();
         // console.log(currentEvent);
-
-
-        if (currentEvent.title === "START") {
-            displayMenuPage();
-            return;
-        }
-
-        // if (currentEvent.title === "WAIT_MENU") {
-        //     waitForActionMenuPage();
-        //     return;
-        // }
 
         if (currentEvent.title === "MOUSE_MOVED") {
             //mouse move logic here for now
@@ -29,14 +21,22 @@ const listenForEvents = () => {
             if (state.page === "home" && state.in === "wait") {
                 waitForActionMenuPage(currentEvent.x, currentEvent.y);
             }
-            return;
         }
 
         if (currentEvent.title === "MOUSE_RELEASED") {
             if (state.page === "home" && (state.in === "wait" || state.in === "loading")) {
                 checkIfEnterGamePressed(currentEvent.x, currentEvent.y);
             }
-            return;
+        }
+
+        if (currentEvent.title === "DROP_CHARACTER") {
+            //could check oage and state here
+            state.in = "game";
+            populateLilRed();
+        }
+
+        if (currentEvent.title === "LIL_RED_WALK_IN") {
+            lilRedWalkIn(currentEvent.data);
         }
     }
 
